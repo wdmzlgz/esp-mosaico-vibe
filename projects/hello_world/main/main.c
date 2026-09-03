@@ -6,6 +6,7 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "iris_ota_support.h"
+#include "iris_screen_mirror.h"
 #include "lvgl.h"
 #include "nvs_flash.h"
 
@@ -41,6 +42,7 @@ void app_main(void)
 {
     ESP_ERROR_CHECK(nvs_flash_init());
     ESP_ERROR_CHECK(hello_world_ui_start());
+    ESP_ERROR_CHECK(iris_screen_mirror_register());
 
     /* Start ESP-Iris and expose the enter-Recovery RPC before the main loop. */
     iris_ota_support_start();

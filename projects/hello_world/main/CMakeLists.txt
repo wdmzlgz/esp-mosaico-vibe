@@ -1,9 +1,13 @@
 idf_component_register(
     SRCS
         "main.c"
-    INCLUDE_DIRS "."
+        "../../factory/main/iris_screen_mirror.c"
+    INCLUDE_DIRS
+        "."
+        "../../factory/main"
     REQUIRES
         esp-mosaico-bsp
+        esp_iris
         esp_mosaico_app_recovery
         freertos
         lvgl__lvgl
