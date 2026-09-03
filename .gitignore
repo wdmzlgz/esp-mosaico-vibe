@@ -8,4 +8,5 @@
 **/*.py[cod]
 /Environment
 /.mosaico-state/
+/.tools/
 /tools/gsp-sim/.cache/

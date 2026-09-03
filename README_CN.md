@@ -44,6 +44,25 @@ python mosaico.py monitor
 git submodule update --init submodule/esp-mosaico-tools
 ```
 
+Web 调试工作台由同一个 Gateway 提供。不要直接运行 ESP-Iris 脚本，使用以下命令
+管理其生命周期：
+
+```sh
+# 仅当前 Linux/macOS/Windows 主机访问
+python mosaico.py workbench
+
+# 在可信局域网内访问（会显示可从其他电脑打开的 URL）
+python mosaico.py workbench restart --access lan
+
+python mosaico.py workbench status
+python mosaico.py workbench stop
+```
+
+默认地址是 `http://127.0.0.1:8443/`。通过 Windows VS Code Remote SSH
+开发时，这个地址属于远端主机；CLI 会提示先在 VS Code 的 Ports 面板转发 8443。
+LAN 模式监听所有主机接口，并要求远程用户登录；首次密码应在隔离环境中立即修改。
+当前 LAN 模式使用 HTTP，只适合可信开发网络。
+
 `list` 会连接 Gateway，列出 Device ID、在线状态、连接方式、固件身份、运行模式和
 Boot ID，并保留 Gateway 缓存中的离线设备。使用 `list --details` 查看 endpoint、
 ESP-IDF 版本、Session ID 和能力列表，或使用 `list --json` 查看完整 Gateway 记录。

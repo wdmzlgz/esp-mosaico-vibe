@@ -50,6 +50,20 @@ BSP, ESP-Iris, and build paths. Initialize the tool checkout with:
 git submodule update --init submodule/esp-mosaico-tools
 ```
 
+Manage the Gateway Web Workbench through the product CLI:
+
+```sh
+python mosaico.py workbench
+python mosaico.py workbench restart --access lan
+python mosaico.py workbench status
+python mosaico.py workbench stop
+```
+
+Local mode listens at `http://127.0.0.1:8443/`. Under VS Code Remote SSH,
+forward port 8443 in the Ports view before opening that URL. LAN mode prints a
+URL reachable from other computers, requires remote users to authenticate, and
+uses unencrypted HTTP, so enable it only on a trusted development network.
+
 `list` connects to the Gateway and prints Device IDs, online state, connection
 type, firmware identity, mode, and Boot ID. It includes cached offline devices;
 use `list --details` for endpoint, ESP-IDF version, Session ID, and capabilities,
