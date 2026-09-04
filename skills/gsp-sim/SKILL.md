@@ -1,23 +1,24 @@
 ---
 name: gsp-sim
 description: >
-  Preview ESP-GSP scenes on the PC. Interactive mode uses the mosaico-ui
-  WebAssembly player; headless dumps use the official sim matching
+  Preview ESP-GSP scenes on the PC. Interactive mode uses the application
+  WebAssembly host; headless dumps use the official sim matching
   submodule/esp-gsp (espressif/esp-gsp 1.1.0). Use when authoring or
   debugging GSP JSON/UI for ESP-Mosaico before flashing.
 ---
 
 # ESP-GSP host simulation
 
-Use this skill when the application UI is **GSP**, not LVGL. Factory remains
-LVGL unless the task explicitly switches it.
+Use this skill to **preview** GSP scenes. For authoring scenes, portable C,
+and assets, load `skills/develop-gsp/SKILL.md` first. Factory remains LVGL
+unless the task explicitly switches it.
 
 ## Pin
 
 - Runtime: `submodule/esp-gsp` = **espressif/esp-gsp 1.1.0**
 - Compiler: standalone `gspc` from `.gspc_version` (fetched by `fetch_gspc.py`)
-- Interactive preview: mosaico-ui-style host in `tools/gsp-sim/host/`
-  compiles `projects/<name>/app/*.c` (`gsp_app_start`) to WASM
+- Interactive preview: host in `tools/gsp-sim/host/` compiles
+  `projects/<name>/app/*.c` (`gsp_app_start`) to WASM
 - Headless dump: official standalone `sim` (`GSP_SIM_EXECUTABLE`)
 
 ## Run

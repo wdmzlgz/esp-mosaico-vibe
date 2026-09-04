@@ -56,10 +56,11 @@ confirmation before clone or install.
    The tools-owned Recovery project is an internal `mosaico.py recover`
    resource and is never a user application template.
 3. Read `skills/README.md`, then load only the `SKILL.md` files relevant to the
-   requested capabilities. For GSP UI work, load `skills/gsp-sim/SKILL.md` and
-   preview scenes with `python3 tools/gsp-sim/run.py` using
-   **espressif/esp-gsp 1.1.0** in `submodule/esp-gsp` (WASM interactive
-   player, official `sim` for headless dumps).
+   requested capabilities. For GSP UI work, load
+   `skills/develop-gsp/SKILL.md` and `skills/gsp-sim/SKILL.md`, then preview
+   with `python3 tools/gsp-sim/run.py` using **espressif/esp-gsp 1.1.0** in
+   `submodule/esp-gsp` (application WASM interactive preview, official `sim`
+   for headless dumps).
    Do not import Mosaic claw hub/runtime into this repository.
 4. Component repositories and supporting project material are Git submodules.
    Initialize and inspect only the submodules needed for the current task.

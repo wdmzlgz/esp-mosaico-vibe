@@ -1,0 +1,12 @@
+---
+description: Load the vibe GSP skill for scene and portable-C work.
+globs: projects/**/ui/**,projects/**/app/**
+alwaysApply: false
+---
+
+# ESP-GSP application UI
+
+Before editing GSP scenes or portable app C, read and follow
+`skills/develop-gsp/SKILL.md`. Preview with `skills/gsp-sim/SKILL.md`.
+Do not import Mosaic claw hub, Lua, or the HTML review site.
+Do not start by scanning the entire ESP-GSP component.
