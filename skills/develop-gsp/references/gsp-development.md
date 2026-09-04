@@ -14,8 +14,10 @@ Do not import Mosaic claw hub, Lua apps, or the HTML review site.
 | ESP target | `projects/<name>/main/` + `submodule/esp-gsp` **1.1.0** | Display, touch, Recovery/OTA | Real-board behavior |
 
 Firmware links `submodule/esp-gsp` 1.1.0. The interactive WASM host links
-the packaged simulator archives under `tools/gsp-sim/sdk/esp-gsp`. Host
-success is not board proof.
+official `espressif/esp-gsp` **1.0.0** from the Component Registry
+(`tools/gsp-sim/fetch_gspc.py --sdk` → `tools/gsp-sim/sdk/esp-gsp`). Host
+success is not board proof. Registry 1.1.0 strips `include/gsp/sim` and
+`prebuilt/sim`; 1.0.0 still ships the session SDK.
 
 ## Architecture and files
 

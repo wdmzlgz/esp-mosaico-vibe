@@ -16,6 +16,8 @@ unless the task explicitly switches it.
 ## Pin
 
 - Runtime: `submodule/esp-gsp` = **espressif/esp-gsp 1.1.0**
+- Host session SDK: official Component Registry **espressif/esp-gsp 1.0.0**
+  (`python3 tools/gsp-sim/fetch_gspc.py --sdk`)
 - Compiler: standalone `gspc` from `.gspc_version` (fetched by `fetch_gspc.py`)
 - Interactive preview: host in `tools/gsp-sim/host/` compiles
   `projects/<name>/app/*.c` (`gsp_app_start`) to WASM
