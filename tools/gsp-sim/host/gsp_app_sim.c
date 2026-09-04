@@ -1,8 +1,7 @@
 /*
- * Thin host for a vibe GSP application. Same idea as mosaico-ui's mosaic_sim:
- * create an ESP-GSP simulator session, then run the project's portable C
- * (`gsp_app_start`) against the live handle. Emscripten builds this into a
- * browser binary; it does not import Mosaic claw/Lua/hub.
+ * Thin host for a vibe GSP application: create an ESP-GSP simulator
+ * session, then run the project's portable C (`gsp_app_start`) against
+ * the live handle. Emscripten builds this into a browser binary.
  */
 
 #define _POSIX_C_SOURCE 200112L
@@ -19,9 +18,11 @@
 #include <emscripten/html5.h>
 #endif
 
+#include "esp_gsp.h"
 #include "gsp/gsp_types.h"
 #include "gsp/sim/esp_gsp_simulator.h"
-#include "gsp_hello_app.h"
+
+esp_err_t gsp_app_start(esp_gsp_handle_t ui);
 
 #ifndef GSP_APP_BUNDLE_PATH
 #define GSP_APP_BUNDLE_PATH "/scene/preview.gspb"
