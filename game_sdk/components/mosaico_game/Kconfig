@@ -1,0 +1,13 @@
+menu "Mosaico Game Runtime"
+
+config MOSAICO_GAME_DEFAULT_FPS
+    int "Default target frame rate"
+    range 1 120
+    default 30
+
+config MOSAICO_GAME_EVENT_QUEUE_LENGTH
+    int "Device event queue length"
+    range 8 128
+    default 32
+
+endmenu

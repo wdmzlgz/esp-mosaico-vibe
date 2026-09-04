@@ -1,0 +1,11 @@
+dependencies:
+  # Public engine/runtime versions are platform ABI pins.
+  idf: ">=6.1"
+  georgik/raylib: "==6.0.0~2"
+  espressif/esp-gsp: "==1.0.0"
+  esp-mosaico-bsp:
+    version: "*"
+    override_path: ../../../submodule/esp-mosaico-bsp/components/esp-mosaico-bsp
+  esp_iris:
+    version: "*"
+    override_path: ../../../submodule/esp-iris/components/esp_iris

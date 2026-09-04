@@ -1,0 +1,18 @@
+// SPDX-License-Identifier: Apache-2.0
+#include "mosaico_game_tilemap.h"
+#include <string.h>
+#include "mosaico_game_2d.h"
+#define MTM_MAGIC 0x314d544dU
+#define MTM_SLOTS 4
+typedef struct __attribute__((packed)){uint32_t magic;uint16_t width,height,tile_width,tile_height,layers,objects;uint32_t points,layer_bytes,collision_bytes,atlas_id;} map_header_t;
+typedef struct __attribute__((packed)){uint32_t id;int16_t x,y,width,height;uint32_t flags;} map_object_t;
+struct mosaico_tilemap_slot{bool used;mosaico_asset_view_t asset;const map_header_t*h;const uint16_t*layers;const uint8_t*collision;const map_object_t*objects;const int16_t*points;MosaicoAtlas atlas;Vector2 point_cache[32];};
+static struct mosaico_tilemap_slot s_maps[MTM_SLOTS];
+MosaicoTilemap LoadMosaicoTilemap(const char*path){mosaico_asset_view_t a={0};if(mosaico_game_asset_open(path,&a)!=ESP_OK||a.size<sizeof(map_header_t))return NULL;const map_header_t*h=(const map_header_t*)a.data;size_t need=sizeof(*h)+h->layer_bytes+h->collision_bytes+(size_t)h->objects*sizeof(map_object_t)+(size_t)h->points*4;if(h->magic!=MTM_MAGIC||need>a.size||h->points>32)return NULL;mosaico_asset_view_t av={0};if(mosaico_game_asset_open_id(h->atlas_id,&av)!=ESP_OK)return NULL;for(unsigned i=0;i<MTM_SLOTS;++i)if(!s_maps[i].used){struct mosaico_tilemap_slot*m=&s_maps[i];memset(m,0,sizeof(*m));m->used=true;m->asset=a;m->h=h;m->layers=(const uint16_t*)(a.data+sizeof(*h));m->collision=a.data+sizeof(*h)+h->layer_bytes;m->objects=(const map_object_t*)(m->collision+h->collision_bytes);m->points=(const int16_t*)(m->objects+h->objects);m->atlas=LoadMosaicoAtlas(av.name);if(!m->atlas.texture.id){memset(m,0,sizeof(*m));return NULL;}for(uint32_t p=0;p<h->points;++p)m->point_cache[p]=(Vector2){m->points[p*2],m->points[p*2+1]};return m;}return NULL;}
+void DrawMosaicoTilemapLayer(MosaicoTilemap m,uint32_t layer,Rectangle viewport){if(!m||!m->used||layer>=m->h->layers)return;int x0=(int)viewport.x/m->h->tile_width,y0=(int)viewport.y/m->h->tile_height,x1=(int)(viewport.x+viewport.width+m->h->tile_width-1)/m->h->tile_width,y1=(int)(viewport.y+viewport.height+m->h->tile_height-1)/m->h->tile_height;if(x0<0)x0=0;if(y0<0)y0=0;if(x1>m->h->width)x1=m->h->width;if(y1>m->h->height)y1=m->h->height;const uint16_t*tiles=m->layers+(size_t)layer*m->h->width*m->h->height;for(int y=y0;y<y1;++y)for(int x=x0;x<x1;++x){uint16_t id=tiles[(size_t)y*m->h->width+x];if(!id)continue;Rectangle src={(float)((id-1)*m->h->tile_width),0,(float)m->h->tile_width,(float)m->h->tile_height};Rectangle dst={(float)(x*m->h->tile_width),(float)(69+y*m->h->tile_height),(float)m->h->tile_width,(float)m->h->tile_height};Mosaico2DDrawTexturePro(m->atlas.texture,src,dst,(Vector2){0,0},0,WHITE);}}
+bool MosaicoTilemapIsBlocked(MosaicoTilemap m,int x,int y){if(!m||x<0||y<0||x>=m->h->width||y>=m->h->height)return true;size_t i=(size_t)y*m->h->width+x;return(m->collision[i/8]&(1U<<(i&7)))!=0;}
+static void copy_object(const map_object_t*i,MosaicoMapObject*o){*o=(MosaicoMapObject){i->id,i->x,i->y,i->width,i->height,i->flags};}
+bool MosaicoTilemapFindObject(MosaicoTilemap m,mosaico_asset_id_t id,MosaicoMapObject*out){if(!m||!out)return false;for(uint16_t i=0;i<m->h->objects;++i)if(m->objects[i].id==id){copy_object(&m->objects[i],out);return true;}return false;}
+bool MosaicoTilemapObjectAt(MosaicoTilemap m,size_t i,MosaicoMapObject*out){if(!m||!out||i>=m->h->objects)return false;copy_object(&m->objects[i],out);return true;}
+size_t MosaicoTilemapPathPoints(MosaicoTilemap m,const Vector2**out){if(!m||!out)return 0;*out=m->point_cache;return m->h->points;}
+void UnloadMosaicoTilemap(MosaicoTilemap m){if(m&&m->used){UnloadMosaicoAtlas(m->atlas);memset(m,0,sizeof(*m));}}

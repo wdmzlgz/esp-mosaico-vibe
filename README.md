@@ -39,6 +39,7 @@ python mosaico.py list
 python mosaico.py recover
 python mosaico.py install --project projects/<project>
 python mosaico.py monitor
+python mosaico.py screenshot
 ```
 
 The root launcher delegates to the pinned `submodule/esp-mosaico-tools`
@@ -148,6 +149,8 @@ partitions without explicit user authorization.
 
 - `projects/hello_world` — reference application for new developer projects.
 - `projects/gsp_hello` — GSP Hello World for PC simulation and device installation.
+- `projects/raylib_shooter`, `projects/tower_defense`, `projects/sky_hop` — Raylib game samples.
+- `game_sdk/` — host runner and device game components.
 - `projects/factory` — retained Recovery firmware; never install it as a normal application.
 - `components/esp_mosaico_app_recovery` — normal-application Recovery entry and health support.
 - `submodule/esp-gsp/` — pinned ESP-GSP 1.1.0 (device prebuilts; sim/gspc fetched separately).

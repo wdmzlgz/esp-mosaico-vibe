@@ -5,6 +5,10 @@
 
 #include "sdkconfig.h"
 
+#ifndef CONFIG_ESP_IRIS_TCP_PORT
+#define CONFIG_ESP_IRIS_TCP_PORT 19772
+#endif
+
 #include "bsp/esp_mosaico.h"
 #include "esp_check.h"
 #include "esp_iris.h"
@@ -1093,60 +1097,11 @@ static void system_update_ui_update(const esp_iris_status_t *iris)
 
 static bool ota_ui_update(const esp_iris_status_t *iris)
 {
-    esp_iris_ota_status_t ota = {0};
-    if (esp_iris_ota_get_status(&ota) != ESP_OK || ota.job_id == 0) {
-        return false;
-    }
-
-    if (ota.active) {
-        s_ui.ota_job_id = ota.job_id;
-        s_ui.ota_was_active = true;
-        lv_label_set_text(s_ui.update_title, "Updating firmware");
-        lv_label_set_text_fmt(s_ui.update_detail,
-                              "Receiving application - %lu / %lu KB",
-                              (unsigned long)(ota.received_size / 1024U),
-                              (unsigned long)(ota.total_size / 1024U));
-        lv_label_set_text_fmt(s_ui.update_percent, "%u%%",
-                              ota.progress_permille / 10U);
-        lv_bar_set_value(s_ui.update_bar, ota.progress_permille, LV_ANIM_OFF);
-        lv_label_set_text(s_ui.update_owner, transport_name(iris->transport));
-        lv_label_set_text(s_ui.update_verified, "SHA-256");
-        if (s_ui.page != FACTORY_PAGE_UPDATE) {
-            show_page(FACTORY_PAGE_UPDATE);
-        }
-        const uint16_t bucket = ota.progress_permille / 100U;
-        if (bucket != s_ui.ota_logged_bucket) {
-            s_ui.ota_logged_bucket = bucket;
-            ESP_LOGI(TAG, "Recovery OTA progress: %u%% (%lu/%lu bytes)",
-                     ota.progress_permille / 10U,
-                     (unsigned long)ota.received_size,
-                     (unsigned long)ota.total_size);
-        }
-        return true;
-    }
-
-    if (!s_ui.ota_was_active || ota.job_id != s_ui.ota_job_id) {
-        return false;
-    }
-    if (ota.state == ESP_IRIS_JOB_SUCCEEDED) {
-        lv_label_set_text(s_ui.update_title, "Firmware verified");
-        lv_label_set_text(s_ui.update_detail,
-                          "Restarting into the application");
-        lv_label_set_text(s_ui.update_percent, "100%");
-        lv_bar_set_value(s_ui.update_bar, 1000, LV_ANIM_OFF);
-        ESP_LOGI(TAG, "Recovery OTA verified; restarting application");
-    } else if (ota.state == ESP_IRIS_JOB_FAILED ||
-               ota.state == ESP_IRIS_JOB_CANCELLED) {
-        lv_obj_set_style_bg_color(s_ui.result_mark, COLOR_RED, LV_PART_MAIN);
-        lv_label_set_text(s_ui.result_title, "Firmware update failed");
-        lv_label_set_text_fmt(s_ui.result_detail,
-                              "Error 0x%08x - reconnect and retry",
-                              (unsigned)ota.result);
-        show_page(FACTORY_PAGE_RESULT);
-        ESP_LOGE(TAG, "Recovery OTA failed: %s",
-                 esp_err_to_name(ota.result));
-    }
-    return true;
+    /* ESP-Iris no longer exposes mutable OTA job state as a public firmware
+     * API. System-update progress is rendered above; legacy single-image OTA
+     * remains observable through Gateway logs and reconnect state. */
+    (void)iris;
+    return false;
 }
 
 static void ui_status_task(void *arg)

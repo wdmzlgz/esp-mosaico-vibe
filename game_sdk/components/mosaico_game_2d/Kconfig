@@ -1,0 +1,8 @@
+menu "Mosaico Game 2D"
+
+config MOSAICO_GAME_MAX_TEXTURES
+    int "Maximum simultaneously loaded atlases"
+    range 1 32
+    default 12
+
+endmenu

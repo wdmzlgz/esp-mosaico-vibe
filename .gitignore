@@ -10,3 +10,24 @@
 /.mosaico-state/
 /.tools/
 /tools/gsp-sim/.cache/
+
+# Runtime evidence and local debugging output.
+/artifacts/
+*.core
+.gdb_history
+
+# Editor, test, and coverage caches.
+**/.pytest_cache/
+**/.coverage
+**/htmlcov/
+**/.DS_Store
+**/*~
+**/*.swp
+**/*.swo
+
+# Game content compiled by game_sdk/tools/pack_game_assets.py.
+**/assets/generated/
+
+# Sky Hop intermediates reproduced by assets_src generators.
+/projects/sky_hop/assets_src/*.wav
+/projects/sky_hop/assets_src/sky_hop_atlas.png

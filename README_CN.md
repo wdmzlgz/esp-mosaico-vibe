@@ -34,6 +34,7 @@ python mosaico.py list
 python mosaico.py recover
 python mosaico.py install --project projects/<project>
 python mosaico.py monitor
+python mosaico.py screenshot
 ```
 
 根目录启动器会转发到固定版本的 `submodule/esp-mosaico-tools`，不会把 CLI
@@ -135,6 +136,8 @@ ESP-Mosaico 只有一个 High-Speed USB 接口。正常固件和 Recovery 都会
 
 - `projects/hello_world`：新开发者工程使用的参考应用。
 - `projects/gsp_hello`：支持 PC 仿真和真机安装的 GSP Hello World。
+- `projects/raylib_shooter`、`projects/tower_defense`、`projects/sky_hop`：Raylib 游戏示例。
+- `game_sdk/`：主机 runner 与设备游戏组件。
 - `projects/factory`：保留 Recovery 固件，不作为普通应用安装。
 - `components/esp_mosaico_app_recovery`：普通应用进入 Recovery 和健康确认支持。
 - `submodule/esp-gsp/`：固定的 ESP-GSP 1.1.0（设备预编译库；主机仿真器与 gspc 另行下载）。
@@ -148,6 +151,42 @@ ESP-Mosaico 只有一个 High-Speed USB 接口。正常固件和 Recovery 都会
 - `.mosaico.json`：由工具子模块读取的工作区路径和设备配置。
 - `.agents/`：面向 Agent 的私有文档和工具，不承载产品 CLI。
 - `AGENTS.md`：供编码 Agent 使用的简明路由与操作规则。
+
+## Raylib 游戏开发（MVP）
+
+`game_sdk/` 提供固定 480×480 RGB565 的游戏生命周期、输入事件、编译期资源
+打包、调试统计、Sprite Atlas、Tiled Tilemap、PCM16/IMA-ADPCM 采样音频，以及
+Raylib 风格 2D API 到 GSP Canvas 的 RGB565 快速适配层。
+设备端常用图元不经过通用 `rlsw` 软件 OpenGL 光栅器；四个 PSRAM framebuffer
+直接提交给 GSP，以吸收 LCD 周转延迟并避免整屏复制。
+参考游戏包括纵向射击 `projects/raylib_shooter` 和塔防游戏
+`projects/tower_defense`。塔防示例演示波次、三类塔、三类敌人、对象池、寻路、
+升级经济、减速效果和确定性状态：
+
+```bash
+python mosaico.py game run --project projects/raylib_shooter --headless
+python mosaico.py game build --project projects/raylib_shooter
+python mosaico.py install --project projects/raylib_shooter
+
+python mosaico.py game run --project projects/tower_defense --headless
+python mosaico.py game run --project projects/tower_defense
+python mosaico.py game build --project projects/tower_defense
+python mosaico.py install --project projects/tower_defense
+```
+
+新游戏可从参考项目生成：
+
+```bash
+python mosaico.py game new my_game
+```
+
+游戏代码通过 `mosaico_raylib_fast.h` 使用 Raylib 兼容的常用 2D API；Atlas 的
+RGB565 不透明路径使用逐行复制，A8 图像支持色调、裁剪、翻转、nearest 缩放和软件
+旋转回退。资源由 `esp_mmap_assets` 从固定 1 MiB `game_assets` 分区 mmap，运行时不
+解析 PNG、JSON、TMJ 或 WAV。参考项目以 30 Hz 运行，并通过 BSP、`esp_codec_dev`
+和 I2S 输出 8 路 SFX 与循环 BGM。Host runner 使用相同资源、塔防 C 游戏模型和
+RGB565 C 渲染核心生成确定性 PNG/状态摘要，并在非 headless 模式提供浏览器页面。
+更完整的组件说明见 [`game_sdk/README.md`](game_sdk/README.md)。
 
 仓库的目标、架构、功能契约和适用边界见
 [`docs/repository-specification.zh-CN.md`](docs/repository-specification.zh-CN.md)。

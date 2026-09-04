@@ -1,0 +1,11 @@
+menu "Mosaico Game Display"
+
+config MOSAICO_GAME_FRAMEBUFFER_COUNT
+    int "PSRAM framebuffer count"
+    range 2 4
+    default 4
+    help
+        Each 480x480 RGB565 framebuffer uses 450 KiB of PSRAM. More buffers
+        tolerate display latency but reduce memory available to the game.
+
+endmenu

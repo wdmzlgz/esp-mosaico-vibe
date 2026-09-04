@@ -139,6 +139,7 @@ static esp_err_t apply_station_config(const char *ssid, const char *password)
 
 static void mdns_start(void)
 {
+#if CONFIG_ESP_IRIS_TRANSPORT_TCP
     if (s_network.mdns_started) {
         return;
     }
@@ -197,6 +198,7 @@ static void mdns_start(void)
     xSemaphoreGive(s_network.lock);
     ESP_LOGI(TAG, "mDNS service %s.local:%u", hostname,
              CONFIG_ESP_IRIS_TCP_PORT);
+#endif
 }
 
 static void scan_results_update(void)
