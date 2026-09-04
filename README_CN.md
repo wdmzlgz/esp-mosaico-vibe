@@ -128,7 +128,7 @@ ESP-Mosaico 只有一个 High-Speed USB 接口。正常固件和 Recovery 都会
 - `tests/firmware/`：仅供集成和验收测试使用的可烧录设备固件。
 - `components/esp_mosaico_app_recovery`：普通应用进入 Recovery 和健康确认支持。
 - `submodule/esp-gsp/`：固定的 ESP-GSP 1.1.0（设备预编译库；主机仿真器与 gspc 另行下载）。
-- `tools/gsp-sim/`：打包场景并运行独立的 ESP-GSP `sim`。
+- `tools/gsp-sim/`：打包场景，用应用 WebAssembly 宿主做交互预览，无头截图仍走官方 `sim`。
 - `submodule/esp-mosaico-tools/`：固定版本的仓库本地 `mosaico.py` 实现及其
   内置 Recovery 固件和嵌套锁定的 ESP-Iris 固件/主机运行时，无需全局安装 CLI。
 - `skills/`：面向 Agent 和开发者的任务集成指南，详见

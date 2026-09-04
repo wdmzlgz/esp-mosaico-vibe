@@ -9,3 +9,5 @@
 /Environment
 /.mosaico-state/
 /tools/gsp-sim/.cache/
+/tools/gsp-sim/build-web/
+/tools/gsp-sim/sdk/esp-gsp/

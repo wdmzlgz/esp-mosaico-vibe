@@ -4,8 +4,10 @@ idf_component_register(
         "board_display.c"
         "iris_screen_mirror.c"
         "ui_bundle.c"
+        "../app/gsp_hello_app.c"
     INCLUDE_DIRS
         "."
+        "../app"
     REQUIRES
         esp_iris
         esp-mosaico-bsp

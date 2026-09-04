@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ESP-GSP 应用预览</title>
+  <style>
+    :root { color-scheme: dark; background: #101114; font-family: system-ui, sans-serif; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
+    main { display: grid; justify-items: center; gap: 14px; padding: 24px; }
+    canvas { width: min(92vw, 480px); height: auto; image-rendering: pixelated;
+             touch-action: none; border-radius: 18px;
+             box-shadow: 0 18px 55px #0009; background: #000; }
+    p { margin: 0; color: #adb5bd; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <main>
+    <canvas id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+    <p id="status">正在加载应用 WebAssembly…</p>
+  </main>
+  <script>
+    var Module = {
+      canvas: document.getElementById("canvas"),
+      print: function (message) {
+        console.log(message);
+        document.getElementById("status").textContent = message;
+      },
+      printErr: function (message) {
+        console.warn(message);
+        document.getElementById("status").textContent = "诊断：" + message;
+      },
+      onAbort: function (message) {
+        document.getElementById("status").textContent = "启动失败：" + message;
+      }
+    };
+  </script>
+  {{{ SCRIPT }}}
+</body>
+</html>

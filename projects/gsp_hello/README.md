@@ -14,6 +14,8 @@ From the vibe repository root:
 ```sh
 python3 tools/gsp-sim/run.py projects/gsp_hello/ui/main.json --headless --dump-ppm /tmp/gsp-hello.ppm
 python3 tools/gsp-sim/run.py projects/gsp_hello/ui/main.json --interactive
+# then open http://127.0.0.1:8877/
+# Portable UI logic lives in app/gsp_hello_app.c (device + WASM).
 ```
 
 ## Flash

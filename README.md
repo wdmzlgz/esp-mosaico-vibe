@@ -151,7 +151,7 @@ partitions without explicit user authorization.
 - `tests/firmware/` — flashable device firmware used only by integration and acceptance tests.
 - `components/esp_mosaico_app_recovery` — normal-application Recovery entry and health support.
 - `submodule/esp-gsp/` — pinned ESP-GSP 1.1.0 (device prebuilts; sim/gspc fetched separately).
-- `tools/gsp-sim/` — packs scenes and runs the standalone ESP-GSP `sim`.
+- `tools/gsp-sim/` — packs scenes, serves the application WebAssembly preview, and runs official `sim` for headless dumps.
 - `submodule/esp-mosaico-tools/` — pinned repository-local implementation of
   `mosaico.py`, its internal Recovery firmware, and its nested pinned ESP-Iris
   firmware/host runtime; no global CLI installation is required.

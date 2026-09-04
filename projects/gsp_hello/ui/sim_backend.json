@@ -1,0 +1,11 @@
+{
+  "timers": [
+    {
+      "bind_id": 1,
+      "period_ms": 250,
+      "step": 5,
+      "modulo": 101,
+      "start": 0
+    }
+  ]
+}
