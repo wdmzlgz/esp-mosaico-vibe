@@ -85,7 +85,7 @@ Agent-Led 的默认主导关系是：**Agent 持续推进，用户在关键节�
 
 - Agent 基于设备显示与触摸约束实现 LVGL 界面。
 - Recovery 固件通过 ESP-Iris 注册 RGB565 屏幕镜像后端，使开发者和 Agent 可在 Gateway 工作台观察恢复界面；具体应用按自身 UI 架构注册对应后端。
-- 使用 GSP 的应用在 PC 上通过 `tools/gsp-sim` 预览 480×480 场景；交互预览使用 mosaico-ui 同款 WebAssembly 播放器，无头截图与固件打包仍配套 `submodule/esp-gsp` 中的 **espressif/esp-gsp 1.1.0**。
+- 使用 GSP 的应用在 PC 上通过 `tools/gsp-sim` 预览 480×480 场景；交互预览使用应用 WebAssembly 宿主，无头截图与固件打包仍配套 `submodule/esp-gsp` 中的 **espressif/esp-gsp 1.1.0**。
 - UI 调整与固件调试共享同一设备记录，减少人工往返。
 - 专项 Skill 可扩展视觉比较能力。具体应用负责定义验收基准。
 
@@ -204,7 +204,7 @@ ESP-Mosaico 真实设备
 | Recovery 工程 | `submodule/esp-mosaico-tools/firmware/recovery` | 提供固定的保留 Recovery、OTA writer 和系统恢复能力 | 与 `mosaico.py recover` 同版本维护，不承载普通应用代码 |
 | 应用恢复组件 | `components/esp_mosaico_app_recovery` | 提供正常应用进入 Recovery 和健康确认能力 | 仅供正常应用使用，不包含 OTA writer |
 | GSP 运行时 | `submodule/esp-gsp/` | 固定 espressif/esp-gsp 1.1.0 Git 子模块 | 固件与仿真共用同一 pin |
-| GSP 主机仿真 | `tools/gsp-sim/` | 交互用 mosaico-ui WebAssembly 播放器，无头用独立 `sim` | 不引入 claw hub/runtime |
+| GSP 主机仿真 | `tools/gsp-sim/` | 交互用应用 WebAssembly 宿主，无头用独立 `sim` | 固件仍链接 pinned ESP-GSP |
 | 板级子模块 | `submodule/esp-mosaico-bsp` | 提供 BSP、扩展模块、交互/网络组件和示例 | 按任务初始化和检查 |
 | 工具子模块 | `submodule/esp-mosaico-tools` | 提供统一 CLI、构建 runner、Recovery 固件，并递归锁定 ESP-Iris | 主仓库只固定 tools；Iris 由 tools 的嵌套 gitlink 唯一固定 |
 | 任务指南 | `skills/` | 提供环境安装、构建等任务化说明 | 只加载相关指南 |
