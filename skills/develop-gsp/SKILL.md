@@ -97,6 +97,9 @@ generation.
   in `projects/<name>/ui/*.json` at **480×480 RGB565**.
 - Put portable timers, binds, and click/touch behavior in
   `projects/<name>/app/*.c`. Export `gsp_app_start(esp_gsp_handle_t)`.
+  The preview top-right key is GPIO7 (active-low). Handle it in portable
+  `app/` with `driver/gpio.h` if the WASM preview should react; otherwise
+  leave it unused so the key stays inert. Do not add a fake Back hook.
   Device `main/` only does board, Recovery/Iris, and `gsp_app_start`.
 - Give dynamic objects stable `name`/`bind` and callbacks stable
   `callback` names. Prefer generated helpers after a device or host build

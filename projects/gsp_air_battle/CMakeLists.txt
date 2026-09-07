@@ -35,7 +35,8 @@ set(GSPC_EXECUTABLE "${GSPC_EXECUTABLE}" CACHE FILEPATH
 set(ENV{GSPC_EXECUTABLE} "${GSPC_EXECUTABLE}")
 
 set(EXTRA_COMPONENT_DIRS
-    "${CMAKE_CURRENT_LIST_DIR}/../../components/esp_mosaico_app_recovery")
+    "${CMAKE_CURRENT_LIST_DIR}/../../components/esp_mosaico_app_recovery"
+    "${CMAKE_CURRENT_LIST_DIR}/../../components/esp_mosaico_gsp_iris")
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 project(gsp_air_battle)

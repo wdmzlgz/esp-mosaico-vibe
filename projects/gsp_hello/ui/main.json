@@ -100,6 +100,33 @@
       "fg_color": "#5EC8E8",
       "knob_color": "#E8F4FF",
       "radius": 12
+    },
+    {
+      "type": "label",
+      "parent": 0,
+      "x": 32,
+      "y": 392,
+      "w": 416,
+      "h": 30,
+      "text": "GPIO7",
+      "font_size": 18,
+      "fg_color": "#C0C8E0"
+    },
+    {
+      "type": "progress",
+      "parent": 0,
+      "x": 32,
+      "y": 428,
+      "w": 416,
+      "h": 28,
+      "min": 0,
+      "max": 100,
+      "value": 0,
+      "bind": "press",
+      "name": "press",
+      "bg_color": "#20283C",
+      "fg_color": "#FF7A45",
+      "radius": 9
     }
   ]
 }

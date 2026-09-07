@@ -34,6 +34,10 @@ python3 tools/gsp-sim/run.py --interactive
 
 Open `http://127.0.0.1:8877/` or the printed LAN URL. Override with
 `--host`, `--port`, `MOSAIC_WASM_HOST`, or `MOSAIC_WASM_PORT`.
+The page draws a 480×480 device chrome. The top-right key is **GPIO7**,
+active-low. It drives the host GPIO stub only if portable `app/` C arms
+that pin (`gpio_config`, `gpio_get_level`, or an ISR). It is not a fake
+Back action. Apps that never touch GPIO7 leave the key inert.
 
 The default scene is [`projects/gsp_hello/ui/main.json`](../../projects/gsp_hello/ui/main.json).
 Preview another scene:

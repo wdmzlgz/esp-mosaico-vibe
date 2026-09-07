@@ -38,6 +38,28 @@ Agent-safe check. Interactive mode serves `http://0.0.0.0:8877/` (open
 `http://127.0.0.1:8877/`). Extra official-`sim` flags go after `--` and
 require `--headless` or `--native`.
 
+## Device chrome and GPIO7
+
+The preview draws 480×480 hardware chrome. The top-right orange key is
+**GPIO7**, active-low (idle high, pressed = 0). Pointer down/up writes
+that level into the host GPIO stub (`tools/gsp-sim/host/gsp_sim_gpio.c`).
+
+Enable the key only when portable `app/` C actually uses GPIO7:
+
+- `gpio_config()` with bit 7, or
+- `gpio_get_level(GPIO_NUM_7)`, or
+- `gpio_isr_handler_add(GPIO_NUM_7, …)` / `gpio_set_intr_type(7, …)`
+
+The key always plays the press animation. GPIO level changes only when
+`app/` has armed GPIO7. If it never does, the key is chrome-only. Do
+**not** invent a Back callback (`gsp_app_on_back` is gone). Device-only
+GPIO in `main/` does not reach the WASM binary, so it does not drive
+the preview pin.
+
+Host `driver/gpio.h` is a pin-level stub so the same `app/` C can compile
+off-target. It is not ESP-IDF. Keep `iot_button` and other IDF extras in
+`main/` or behind `#if defined(ESP_PLATFORM)`.
+
 ## Authoring rules
 
 - Scene size **480×480**, RGB565, matching the CO5300 panel.

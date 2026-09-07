@@ -25,10 +25,12 @@ endif()
 
 add_executable(gsp_app_sim
     gsp_app_sim.c
+    gsp_sim_gpio.c
     ${GSP_APP_SOURCES})
 target_compile_features(gsp_app_sim PRIVATE c_std_11)
 target_include_directories(gsp_app_sim PRIVATE
     "${GSP_APP_DIR}"
+    "${CMAKE_CURRENT_LIST_DIR}/include"
     "${ESP_GSP_ROOT}/include")
 target_link_libraries(gsp_app_sim PRIVATE
     esp_gsp::simulator_core
@@ -55,7 +57,7 @@ if(EMSCRIPTEN)
         "-sUSE_FREETYPE=1"
         "-sASYNCIFY"
         "-sALLOW_MEMORY_GROWTH=1"
-        "-sEXPORTED_FUNCTIONS=_main"
+        "-sEXPORTED_FUNCTIONS=_main,_gsp_app_sim_gpio_set,_gsp_app_sim_gpio_armed"
         "-sEXPORTED_RUNTIME_METHODS=ccall,cwrap"
         "--preload-file" "${GSP_APP_BUNDLE}@/scene/preview.gspb"
         "--shell-file" "${CMAKE_CURRENT_LIST_DIR}/../web/shell.html")

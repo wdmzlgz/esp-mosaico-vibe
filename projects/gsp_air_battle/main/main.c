@@ -6,6 +6,7 @@
 #include "esp_gsp_esp_lcd.h"
 #include "esp_log.h"
 #include "gsp_air_battle_app.h"
+#include "iris_gsp_debug.h"
 #include "iris_ota_support.h"
 #include "nvs_flash.h"
 
@@ -17,6 +18,8 @@ void app_main(void)
 
     esp_display_present_target_config_t display;
     ESP_ERROR_CHECK(board_display_init(&display));
+    ESP_ERROR_CHECK(iris_gsp_debug_wrap_panel(
+        display.hw.panel, BSP_LCD_H_RES, BSP_LCD_V_RES, &display.hw.panel));
 
     esp_lcd_touch_handle_t touch = NULL;
     ESP_ERROR_CHECK(board_touch_init(&touch));
@@ -29,6 +32,7 @@ void app_main(void)
     esp_gsp_handle_t ui;
     ESP_ERROR_CHECK(esp_gsp_esp_lcd_start(&app_config, &lcd, &ui));
     ESP_ERROR_CHECK(gsp_app_start(ui));
+    ESP_ERROR_CHECK(iris_gsp_debug_register(ui));
 
     /* Start ESP-Iris and expose the enter-Recovery RPC. */
     iris_ota_support_start();

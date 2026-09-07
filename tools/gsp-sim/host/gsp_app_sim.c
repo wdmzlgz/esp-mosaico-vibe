@@ -21,6 +21,7 @@
 #include "esp_gsp.h"
 #include "gsp/gsp_types.h"
 #include "gsp/sim/esp_gsp_simulator.h"
+#include "gsp_sim_gpio.h"
 
 esp_err_t gsp_app_start(esp_gsp_handle_t ui);
 
@@ -175,6 +176,7 @@ int main(int argc, char **argv)
         free(s_bundle);
         return 1;
     }
+    gsp_sim_gpio_sync_shell();
 
     const esp_gsp_sim_surface_t *surface = esp_gsp_sim_session_surface(s_session);
     if (surface == NULL ||

@@ -10,6 +10,7 @@ idf_component_register(
         esp_iris
         esp-mosaico-bsp
         esp_mosaico_app_recovery
+        esp_mosaico_gsp_iris
         freertos
         nvs_flash
     PRIV_REQUIRES

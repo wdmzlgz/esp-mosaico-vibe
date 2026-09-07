@@ -148,6 +148,13 @@ Keep ESP-IDF-only headers, FreeRTOS, drivers, NVS, and sensors in
 `main/` or behind `#if defined(ESP_PLATFORM)`. Do not claim host mocks
 are device behavior.
 
+Exception: the board's top-right key is **GPIO7**, active-low. The WASM
+host stubs `driver/gpio.h` so portable `app/` can `gpio_config` /
+`gpio_get_level` / register an ISR on `GPIO_NUM_7`. The preview key
+injects level 0 while held and 1 on release, and only after that pin is
+armed. GPIO used only in `main/` stays device-only and does not enable
+the key. Do not invent a Back callback for the chrome.
+
 ## Build and run
 
 From the vibe repository root:

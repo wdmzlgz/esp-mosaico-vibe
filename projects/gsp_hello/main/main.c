@@ -6,6 +6,7 @@
 #include "esp_gsp_esp_lcd.h"
 #include "esp_log.h"
 #include "gsp_hello_app.h"
+#include "iris_gsp_debug.h"
 #include "iris_screen_mirror.h"
 #include "iris_ota_support.h"
 #include "nvs_flash.h"
@@ -15,7 +16,13 @@ static const char *TAG = "gsp_hello";
 
 void app_main(void)
 {
-    ESP_ERROR_CHECK(nvs_flash_init());
+    esp_err_t nvs_err = nvs_flash_init();
+    if (nvs_err == ESP_ERR_NVS_NO_FREE_PAGES ||
+        nvs_err == ESP_ERR_NVS_NEW_VERSION_FOUND) {
+        ESP_ERROR_CHECK(nvs_flash_erase());
+        nvs_err = nvs_flash_init();
+    }
+    ESP_ERROR_CHECK(nvs_err);
 
     /* Keep Recovery reachable even when the external UI image is absent or
      * invalid. */
@@ -31,20 +38,44 @@ void app_main(void)
     }
 
     esp_display_present_target_config_t display;
-    ESP_ERROR_CHECK(board_display_init(&display));
+    if (board_display_init(&display) != ESP_OK) {
+        ESP_LOGE(TAG, "display init failed; ESP-Iris Recovery RPC remains active");
+        return;
+    }
+    if (iris_gsp_debug_wrap_panel(
+            display.hw.panel, BSP_LCD_H_RES, BSP_LCD_V_RES,
+            &display.hw.panel) != ESP_OK) {
+        ESP_LOGE(TAG, "debug panel wrap failed; ESP-Iris Recovery RPC remains active");
+        return;
+    }
 
     esp_lcd_touch_handle_t touch = NULL;
-    ESP_ERROR_CHECK(board_touch_init(&touch));
+    if (board_touch_init(&touch) != ESP_OK) {
+        ESP_LOGE(TAG, "touch init failed; ESP-Iris Recovery RPC remains active");
+        return;
+    }
 
     esp_gsp_esp_lcd_config_t lcd = ESP_GSP_ESP_LCD_CONFIG_INIT();
     lcd.display = display;
     lcd.touch = touch;
 
-    ESP_ERROR_CHECK(iris_screen_mirror_init());
+    if (iris_screen_mirror_init() != ESP_OK) {
+        ESP_LOGE(TAG, "screen mirror init failed; ESP-Iris Recovery RPC remains active");
+        return;
+    }
 
     esp_gsp_handle_t ui;
-    ESP_ERROR_CHECK(esp_gsp_esp_lcd_start(&app_config, &lcd, &ui));
-    ESP_ERROR_CHECK(gsp_app_start(ui));
+    if (esp_gsp_esp_lcd_start(&app_config, &lcd, &ui) != ESP_OK) {
+        ESP_LOGE(TAG, "GSP start failed; ESP-Iris Recovery RPC remains active");
+        return;
+    }
+    if (gsp_app_start(ui) != ESP_OK) {
+        ESP_LOGE(TAG, "GSP app start failed; ESP-Iris Recovery RPC remains active");
+        return;
+    }
+    if (iris_gsp_debug_register(ui) != ESP_OK) {
+        ESP_LOGE(TAG, "GSP debug register failed");
+    }
 
     ESP_LOGI(TAG, "GSP Hello World ready at %dx%d RGB565",
              BSP_LCD_H_RES, BSP_LCD_V_RES);
