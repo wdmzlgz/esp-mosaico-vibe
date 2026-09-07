@@ -27,6 +27,7 @@ WEB_DIR = TOOLS_DIR / "web"
 VENDOR_DIR = WEB_DIR / "vendor"
 BUILD_WEB_DIR = TOOLS_DIR / "build-web"
 BUILD_WASM_SH = TOOLS_DIR / "scripts" / "build_wasm.sh"
+WEB_CHROME_FILES = ("sideboards.css", "sideboards.js")
 DEFAULT_SCENE = REPO_ROOT / "projects" / "gsp_hello" / "ui" / "main.json"
 DEFAULT_WASM_HOST = os.environ.get("MOSAIC_WASM_HOST", "0.0.0.0")
 DEFAULT_WASM_PORT = int(os.environ.get("MOSAIC_WASM_PORT", "8877"))
@@ -86,7 +87,18 @@ def build_app_wasm(bundle: Path, app_dir: Path) -> Path:
     if not page.is_file():
         raise SystemExit(f"WASM host did not emit {page}")
     shutil.copy2(page, BUILD_WEB_DIR / "index.html")
+    copy_web_chrome(BUILD_WEB_DIR)
     return BUILD_WEB_DIR
+
+
+def copy_web_chrome(staging: Path) -> None:
+    for name in WEB_CHROME_FILES:
+        source = WEB_DIR / name
+        if source.is_file():
+            shutil.copy2(source, staging / name)
+    assets = WEB_DIR / "assets"
+    if assets.is_dir():
+        shutil.copytree(assets, staging / "assets", dirs_exist_ok=True)
 
 
 def serve_wasm_preview(staging: Path, host: str, port: int) -> int:
@@ -210,6 +222,7 @@ def main() -> int:
                 shutil.copy2(VENDOR_DIR / "gsp_sim.js", staging / "gsp_sim.js")
                 shutil.copy2(VENDOR_DIR / "gsp_sim.wasm", staging / "gsp_sim.wasm")
                 shutil.copy2(bundle, staging / "preview.gspb")
+                copy_web_chrome(staging)
                 backend = scene.parent / "sim_backend.json"
                 if backend.is_file():
                     shutil.copy2(backend, staging / "backend.json")
