@@ -1,0 +1,5 @@
+version: "0.2.0"
+dependencies:
+  idf: ">=6.1"
+  mosaico_module_mgr:
+    path: ../../../../submodule/esp-mosaico-bsp/components/mosaico_module_mgr

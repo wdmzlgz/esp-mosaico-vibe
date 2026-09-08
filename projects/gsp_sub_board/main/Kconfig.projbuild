@@ -1,0 +1,10 @@
+menu "Sub-board demos"
+config SUB_BOARD_DIN_LEFT_GPIO
+    int "Left matrix LED DIN GPIO"
+    default 48
+    range 0 55
+config SUB_BOARD_DIN_RIGHT_GPIO
+    int "Right matrix LED DIN GPIO"
+    default 47
+    range 0 55
+endmenu

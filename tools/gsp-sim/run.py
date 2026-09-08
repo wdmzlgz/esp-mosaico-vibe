@@ -73,7 +73,10 @@ def app_dir_for_scene(scene: Path) -> Path | None:
 def build_app_wasm(bundle: Path, app_dir: Path) -> Path:
     if not BUILD_WASM_SH.is_file():
         raise SystemExit(f"missing {BUILD_WASM_SH}")
-    scene_dir = BUILD_WEB_DIR / "scene"
+    # Concurrent previews of different applications must not overwrite the
+    # WASM module or preloaded scene being served by another session.
+    build_dir = BUILD_WEB_DIR / app_dir.parent.name
+    scene_dir = build_dir / "scene"
     scene_dir.mkdir(parents=True, exist_ok=True)
     staged_bundle = scene_dir / "preview.gspb"
     if bundle.resolve() != staged_bundle.resolve():
@@ -81,14 +84,14 @@ def build_app_wasm(bundle: Path, app_dir: Path) -> Path:
     environment = os.environ.copy()
     environment["GSP_APP_BUNDLE"] = str(staged_bundle)
     environment["GSP_APP_DIR"] = str(app_dir)
-    environment["GSP_APP_WASM_BUILD_DIR"] = str(BUILD_WEB_DIR)
+    environment["GSP_APP_WASM_BUILD_DIR"] = str(build_dir)
     subprocess.run(["bash", str(BUILD_WASM_SH)], check=True, env=environment)
-    page = BUILD_WEB_DIR / "gsp_app_sim.html"
+    page = build_dir / "gsp_app_sim.html"
     if not page.is_file():
         raise SystemExit(f"WASM host did not emit {page}")
-    shutil.copy2(page, BUILD_WEB_DIR / "index.html")
-    copy_web_chrome(BUILD_WEB_DIR)
-    return BUILD_WEB_DIR
+    shutil.copy2(page, build_dir / "index.html")
+    copy_web_chrome(build_dir)
+    return build_dir
 
 
 def copy_web_chrome(staging: Path) -> None:

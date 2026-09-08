@@ -95,7 +95,7 @@
     }
   };
 
-  const setWs2812Pixel = (side, row, column, color) => {
+  const setWs2812Pixel = (side, row, column, color, level = 1) => {
     const slot = slots[side];
     if (!slot) return false;
     const r = Number(row);
@@ -106,12 +106,15 @@
     const cell = slot.querySelector(`[data-index="${r * 8 + c}"]`);
     if (!cell) return false;
     const cssColor = normalizeColor(color);
-    if (!cssColor || cssColor === "off" || cssColor === "transparent") {
+    const lightLevel = Math.max(0, Math.min(1, Number(level) || 0));
+    if (!cssColor || cssColor === "off" || cssColor === "transparent" || lightLevel === 0) {
       cell.classList.remove("lit");
       cell.style.removeProperty("--led-color");
+      cell.style.removeProperty("--led-level");
       return true;
     }
     cell.style.setProperty("--led-color", cssColor);
+    cell.style.setProperty("--led-level", String(lightLevel));
     cell.classList.add("lit");
     return true;
   };
@@ -122,6 +125,7 @@
     slot.querySelectorAll(".ws2812-cell").forEach((cell) => {
       cell.classList.remove("lit");
       cell.style.removeProperty("--led-color");
+      cell.style.removeProperty("--led-level");
     });
     return true;
   };

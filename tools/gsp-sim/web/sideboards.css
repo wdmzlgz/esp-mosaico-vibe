@@ -194,6 +194,8 @@ body[data-right-board] .side-module-right {
 }
 
 .ws2812-cell {
+  position: relative;
+  isolation: isolate;
   border: 1px solid rgba(150, 152, 148, .18);
   border-radius: 9px;
   background:
@@ -205,12 +207,26 @@ body[data-right-board] .side-module-right {
     0 1px 2px rgba(0, 0, 0, .08);
 }
 
-.ws2812-cell.lit {
-  border-color: rgba(255, 255, 255, .34);
-  background: var(--led-color);
+.ws2812-cell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: color-mix(in srgb, var(--led-color, transparent) 75%, white 25%);
+  opacity: 0;
+}
+
+.ws2812-cell.lit::before {
+  /* The pale cell remains the diffuser material. This emission layer fades
+     from transparent to a bright, diffuser-softened LED hue as PWM intensity
+     increases. Normal alpha keeps the center chromatic; screen blending over
+     the pale base would wash it to white. */
+  opacity: var(--led-level, 1);
   box-shadow:
     0 0 16px var(--led-color),
-    inset 0 1px 2px rgba(255, 255, 255, .55);
+    0 0 5px rgba(255, 255, 255, .45),
+    inset 0 1px 3px rgba(255, 255, 255, .68);
 }
 
 .sideboard-panel {

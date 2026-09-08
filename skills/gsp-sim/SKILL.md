@@ -4,7 +4,7 @@ description: >
   Preview ESP-GSP scenes on the PC. Interactive mode uses the application
   WebAssembly host; headless dumps use the official sim matching
   submodule/esp-gsp (espressif/esp-gsp 1.1.0). Use when authoring or
-  debugging GSP JSON/UI for ESP-Mosaico before flashing.
+  debugging GSP JSON/UI or virtual subboards for ESP-Mosaico before flashing.
 ---
 
 # ESP-GSP host simulation
@@ -59,6 +59,28 @@ the preview pin.
 Host `driver/gpio.h` is a pin-level stub so the same `app/` C can compile
 off-target. It is not ESP-IDF. Keep `iot_button` and other IDF extras in
 `main/` or behind `#if defined(ESP_PLATFORM)`.
+
+## Subboard simulation
+
+Before simulating expansion hardware, read the pin map and complete contract
+in
+[`../develop-gsp/references/subboard-development.md`](../develop-gsp/references/subboard-development.md).
+
+- Put host adapters behind `#if !defined(ESP_PLATFORM)` and keep normal
+  business logic shared.
+- Do not emulate EEPROM or descriptor validation. Show the application’s
+  supported subboards below the device; click inserts, and clicking the
+  selected item again removes it.
+- The project logic owns every interaction after virtual insertion.
+- A camera simulation may use the computer camera, but must preserve the real
+  application's capture, crop, scale, orientation, output range, and cleanup.
+- Show left and right LED boards separately. Identical physical output appears
+  center-symmetric because the right board is mounted 180 degrees.
+- Keep LED animation/RGB generation shared. Browser code visualizes emitted
+  light over the unlit diffuser; it must not paint a zero-brightness cell black.
+- If real WS2812 output occasionally shifts only part of the image, investigate
+  RMT starvation without DMA before changing pixel mapping; consider RMT DMA
+  after checking target support and memory/power constraints.
 
 ## Authoring rules
 

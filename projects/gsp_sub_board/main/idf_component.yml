@@ -1,0 +1,14 @@
+dependencies:
+  idf: ">=6.1"
+  esp-mosaico-bsp:
+    version: "*"
+    override_path: ../../../submodule/esp-mosaico-bsp/components/esp-mosaico-bsp
+  esp_iris:
+    version: "*"
+    override_path: ../../../submodule/esp-mosaico-tools/submodule/esp-iris/components/esp_iris
+  espressif/esp-gsp:
+    version: "==1.1.0"
+    override_path: ../../../submodule/esp-gsp
+  mosaico_module_camera:
+    path: ../../../submodule/esp-mosaico-bsp/components/mosaico_module_camera
+  espressif/led_strip: "^3.0.3"

@@ -3,8 +3,8 @@ name: develop-gsp
 description: >
   Develop, port, or modify ESP-GSP scenes and portable C for vibe projects
   under projects/<name>. Use when implementing GSP JSON, C interactions,
-  assets, icons, or touch/gesture behavior. Do not use Mosaic claw hub,
-  Lua, or the HTML review site.
+  assets, icons, touch/gesture behavior, or subboard detection, drivers, and
+  simulation. Do not use Mosaic claw hub, Lua, or the HTML review site.
 ---
 
 # Develop ESP-GSP UI
@@ -29,8 +29,11 @@ On skill activation, before any GSP edit:
    `projects/gsp_hello` for a new GSP app. Do not put user UI in
    `projects/factory`.
 4. Inspect only that project's `ui/`, `app/`, and `main/`.
-5. Do not import Mosaic claw hub, Lua runtime, or the HTML review site.
-6. Do not edit generated files under `projects/*/build/`,
+5. If the application uses expansion boards, read
+   [references/subboard-development.md](references/subboard-development.md)
+   before changing detection, GPIO, camera, LED, or simulation code.
+6. Do not import Mosaic claw hub, Lua runtime, or the HTML review site.
+7. Do not edit generated files under `projects/*/build/`,
    `tools/gsp-sim/build-web/`, or generated `*_binds.h` / `*_objects.h`.
 
 Then load `skills/gsp-sim/SKILL.md` for the preview commands.
@@ -109,6 +112,10 @@ generation.
 - Keep UI and pure logic platform-neutral. Put FreeRTOS, drivers, NVS,
   networking, sensors, and board calls behind `#if defined(ESP_PLATFORM)`
   or in `main/`. Host/WASM success is not proof of ESP hardware behavior.
+- Put simulation-only subboard adapters behind
+  `#if !defined(ESP_PLATFORM)`. Keep detection-independent business behavior
+  and frame/color generation shared instead of implementing separate host and
+  device behavior.
 - `projects/factory` stays LVGL Recovery. `mosaico.py` remains the device
   path: Recovery first, then `install`.
 
